@@ -13,8 +13,8 @@ code {
 }
 
 canvas {
-  height: 100lvh;
-  width: 100lvw;
+  height: 100vh;
+  width: 100vw;
 }
 #mobileInterface {
   position: fixed;

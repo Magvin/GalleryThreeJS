@@ -9,9 +9,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <div id="mobileInterface" className="noSelect">
-      <div id="joystickWrapper1" />
-    </div>
     <App />
   </React.StrictMode>
 );
