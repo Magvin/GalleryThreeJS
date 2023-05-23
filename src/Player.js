@@ -19,6 +19,8 @@ export function Player({ lerp = THREE.MathUtils.lerp }) {
   const [, get] = useKeyboardControls()
   const isTouching = useRef(false)
   const touchStartPos = useRef({ x: 0, y: 0 })
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
 
   useEffect(() => {
     const handlePointerDown = (event) => {
@@ -29,11 +31,12 @@ export function Player({ lerp = THREE.MathUtils.lerp }) {
     const handlePointerUp = () => {
       isTouching.current = false
     }
+    if(isMobile) {
 
     document.addEventListener("pointerdown", handlePointerDown)
     document.addEventListener("pointerup", handlePointerUp)
     document.addEventListener("pointercancel", handlePointerUp)
-
+    }
 
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown)
@@ -41,7 +44,7 @@ export function Player({ lerp = THREE.MathUtils.lerp }) {
     document.removeEventListener("pointercancel", handlePointerUp)
 
     }
-  }, [])
+  }, [isMobile])
 
   useFrame((state) => {
     if (!ref.current) return
@@ -60,17 +63,23 @@ export function Player({ lerp = THREE.MathUtils.lerp }) {
     // movement
     frontVector.set(0, 0, backward - forward)
     sideVector.set(left - right, 0, 0)
+    if(!isMobile) {
+      direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(SPEED).applyEuler(state.camera.rotation)
+    ref.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z })
+    } else {
     direction.set(0, 0, 0) // Reset the direction vector
+    if (isTouching.current ) {
+      const touchX = touchStartPos.current.x - window.innerWidth / 2
+      const touchY = touchStartPos.current.y - window.innerHeight / 2
 
-    if (isTouching.current) {
-        const touchX = touchStartPos.current.x - window.innerWidth / 2
-        const touchY = touchStartPos.current.y - window.innerHeight / 2
-  
-        direction.add(new THREE.Vector3(touchX, 0, touchY).multiplyScalar(0.01))
-        ref.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z })
-      } else {
-        ref.current.setLinvel({ x: 0, y: velocity.y, z: 0 })
-      }
+      direction.add(new THREE.Vector3(touchX, 0, touchY).multiplyScalar(0.01))
+      ref.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z })
+    } else {
+      ref.current.setLinvel({ x: 0, y: velocity.y, z: 0 })
+    }
+    }
+    
+   
 
     // jumping
     const world = rapier.world.raw()

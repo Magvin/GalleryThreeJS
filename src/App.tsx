@@ -8,6 +8,7 @@ import {
   useCursor,
   Image,
   Text,
+  PointerLockControls,
 } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 import { useRoute, useLocation } from "wouter";
@@ -56,6 +57,7 @@ const GOLDENRATIO = 1.61803398875;
 
 export const App = () => {
   const canvasRef = useRef<any>(null);
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
   return (
     <KeyboardControls
@@ -78,6 +80,7 @@ export const App = () => {
         <group position={[0, 0.5, 0]}>
           <Frames images={images} />
         </group>
+        {!isMobile && <PointerLockControls />}
       </Canvas>
     </KeyboardControls>
   );
