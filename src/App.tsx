@@ -8,10 +8,7 @@ import {
   useCursor,
   Image,
   Text,
-  PointerLockControls,
-  Loader,
 } from "@react-three/drei";
-import { FPSControls } from "react-three-fpscontrols";
 import { Physics } from "@react-three/rapier";
 import { useRoute, useLocation } from "wouter";
 import { easing } from "maath";
@@ -61,43 +58,28 @@ export const App = () => {
   const canvasRef = useRef<any>(null);
 
   return (
-    <>
-      <KeyboardControls
-        map={[
-          { name: "forward", keys: ["ArrowUp", "w", "W"] },
-          { name: "backward", keys: ["ArrowDown", "s", "S"] },
-          { name: "left", keys: ["ArrowLeft", "a", "A"] },
-          { name: "right", keys: ["ArrowRight", "d", "D"] },
-          { name: "jump", keys: ["Space"] },
-        ]}
-      >
-        <Canvas shadows camera={{ fov: 90 }} ref={canvasRef}>
-          <Sky sunPosition={[100, 20, 100]} />
-          <ambientLight intensity={0.3} />
-          <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
-          <Physics gravity={[0, -30, 0]}>
-            <Ground />
-            <Player />
-          </Physics>
-          <group position={[0, 0.5, 0]}>
-            <Frames images={images} />
-          </group>
-          {/* <PointerLockControls /> */}
-          <FPSControls
-            camProps={{
-              makeDefault: true,
-              fov: 80,
-              position: [0, 2.537, 0.7],
-            }}
-            orbitProps={{
-              target: [0, 2.537, 0],
-            }}
-            enableJoystick
-            enableKeyboard
-          />
-        </Canvas>
-      </KeyboardControls>
-    </>
+    <KeyboardControls
+      map={[
+        { name: "forward", keys: ["ArrowUp", "w", "W"] },
+        { name: "backward", keys: ["ArrowDown", "s", "S"] },
+        { name: "left", keys: ["ArrowLeft", "a", "A"] },
+        { name: "right", keys: ["ArrowRight", "d", "D"] },
+        { name: "jump", keys: ["Space"] },
+      ]}
+    >
+      <Canvas shadows camera={{ fov: 90 }} ref={canvasRef}>
+        <Sky sunPosition={[100, 20, 100]} />
+        <ambientLight intensity={0.3} />
+        <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
+        <Physics gravity={[0, -30, 0]}>
+          <Ground />
+          <Player />
+        </Physics>
+        <group position={[0, 0.5, 0]}>
+          <Frames images={images} />
+        </group>
+      </Canvas>
+    </KeyboardControls>
   );
 };
 function Frames({
