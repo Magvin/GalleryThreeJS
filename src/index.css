@@ -14,4 +14,35 @@ code {
 
 canvas {
   height: 100lvh;
+  width: 100lvw;
+}
+#mobileInterface {
+  position: fixed;
+  pointer-events: none;
+  z-index: 11;
+  touch-action: manipulation;
+}
+
+#joystickWrapper1 {
+  pointer-events: auto;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  width: 120px;
+  height: 120px;
+  z-index: 12;
+  touch-action: manipulation;
+  background-color: rgba(red, 0.2);
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }

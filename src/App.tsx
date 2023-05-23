@@ -8,7 +8,10 @@ import {
   useCursor,
   Image,
   Text,
+  PointerLockControls,
+  Loader,
 } from "@react-three/drei";
+import { FPSControls } from "react-three-fpscontrols";
 import { Physics } from "@react-three/rapier";
 import { useRoute, useLocation } from "wouter";
 import { easing } from "maath";
@@ -57,60 +60,44 @@ const GOLDENRATIO = 1.61803398875;
 export const App = () => {
   const canvasRef = useRef<any>(null);
 
-  useEffect(() => {
-    let pointerLockActivatedAt = null;
-    const refCanvas = canvasRef.current;
-    function activatePointerLock() {
-      const now = performance.now();
-      pointerLockActivatedAt = now;
-    }
-    async function inActivatePointerLock() {
-      const now = performance.now();
-      console.log(pointerLockActivatedAt, now);
-      if (
-        pointerLockActivatedAt != null &&
-        now - pointerLockActivatedAt < 3000
-      ) {
-        console.log("triggered");
-        return;
-      }
-
-      await refCanvas.requestPointerLock();
-      activatePointerLock();
-    }
-    refCanvas.addEventListener("click", async () => {
-      await inActivatePointerLock();
-    });
-
-    return () => {
-      refCanvas.addEventListener("click", async () => {
-        await inActivatePointerLock();
-      });
-    };
-  }, []);
   return (
-    <KeyboardControls
-      map={[
-        { name: "forward", keys: ["ArrowUp", "w", "W"] },
-        { name: "backward", keys: ["ArrowDown", "s", "S"] },
-        { name: "left", keys: ["ArrowLeft", "a", "A"] },
-        { name: "right", keys: ["ArrowRight", "d", "D"] },
-        { name: "jump", keys: ["Space"] },
-      ]}
-    >
-      <Canvas shadows camera={{ fov: 90 }} ref={canvasRef}>
-        <Sky sunPosition={[100, 20, 100]} />
-        <ambientLight intensity={0.3} />
-        <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
-        <Physics gravity={[0, -30, 0]}>
-          <Ground />
-          <Player />
-        </Physics>
-        <group position={[0, 0.5, 0]}>
-          <Frames images={images} />
-        </group>
-      </Canvas>
-    </KeyboardControls>
+    <>
+      <KeyboardControls
+        map={[
+          { name: "forward", keys: ["ArrowUp", "w", "W"] },
+          { name: "backward", keys: ["ArrowDown", "s", "S"] },
+          { name: "left", keys: ["ArrowLeft", "a", "A"] },
+          { name: "right", keys: ["ArrowRight", "d", "D"] },
+          { name: "jump", keys: ["Space"] },
+        ]}
+      >
+        <Canvas shadows camera={{ fov: 90 }} ref={canvasRef}>
+          <Sky sunPosition={[100, 20, 100]} />
+          <ambientLight intensity={0.3} />
+          <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
+          <Physics gravity={[0, -30, 0]}>
+            <Ground />
+            <Player />
+          </Physics>
+          <group position={[0, 0.5, 0]}>
+            <Frames images={images} />
+          </group>
+          {/* <PointerLockControls /> */}
+          <FPSControls
+            camProps={{
+              makeDefault: true,
+              fov: 80,
+              position: [0, 2.537, 0.7],
+            }}
+            orbitProps={{
+              target: [0, 2.537, 0],
+            }}
+            enableJoystick
+            enableKeyboard
+          />
+        </Canvas>
+      </KeyboardControls>
+    </>
   );
 };
 function Frames({
